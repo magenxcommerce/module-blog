@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/magenxcommerce/module-blog/compare/v1.0.1...v1.0.2) (2026-08-22)
+
+
+### Bug Fixes
+
+* Claude/amazing franklin 2vh6mb ([#5](https://github.com/magenxcommerce/module-blog/issues/5)) ([4436ae2](https://github.com/magenxcommerce/module-blog/commit/4436ae21d35477fa5808932ca15d970268ca558f))
+
 ## [1.0.1](https://github.com/magenxcommerce/module-blog/compare/v1.0.0...v1.0.1) (2026-08-22)
 
 
