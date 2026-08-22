@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/magenxcommerce/module-blog/compare/v1.0.2...v1.0.3) (2026-08-22)
+
+
+### Bug Fixes
+
+* Correct ResolverInterface FQCN and admin grid/massaction defects ([#7](https://github.com/magenxcommerce/module-blog/issues/7)) ([72c1faf](https://github.com/magenxcommerce/module-blog/commit/72c1faff170164bc64b770fa52ba39c2e91118ef))
+
 ## [1.0.2](https://github.com/magenxcommerce/module-blog/compare/v1.0.1...v1.0.2) (2026-08-22)
 
 
