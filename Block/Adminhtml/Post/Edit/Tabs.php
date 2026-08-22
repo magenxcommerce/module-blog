@@ -4,20 +4,30 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Block\Adminhtml\Post\Edit;
 
+use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Tabs as WidgetTabs;
+use Magento\Backend\Model\Auth\Session;
+use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Registry;
 
 class Tabs extends WidgetTabs
 {
     private Registry $coreRegistry;
 
+    /**
+     * Widget\Tabs requires the auth session and JSON encoder in positions 2
+     * and 3 — they must be accepted and forwarded, not skipped, or $data
+     * lands on a dependency slot and di:compile rejects the constructor.
+     */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
+        Context $context,
+        Session $authSession,
+        EncoderInterface $jsonEncoder,
         Registry $registry,
         array $data = []
     ) {
         $this->coreRegistry = $registry;
-        parent::__construct($context, $data);
+        parent::__construct($context, $authSession, $jsonEncoder, $data);
     }
 
     protected function _construct(): void
