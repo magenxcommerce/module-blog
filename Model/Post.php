@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Magenx\Blog\Model;
+
+use Magento\Framework\Model\AbstractModel;
+
+/**
+ * Blog post.
+ *
+ * @method int getPostId()
+ * @method $this setPostId(int $postId)
+ * @method string getTitle()
+ * @method $this setTitle(string $title)
+ * @method string getShortDescription()
+ * @method $this setShortDescription(?string $shortDescription)
+ * @method string getContent()
+ * @method $this setContent(?string $content)
+ * @method string getImage()
+ * @method $this setImage(?string $image)
+ * @method string getUrlKey()
+ * @method $this setUrlKey(string $urlKey)
+ * @method string getPublishDate()
+ * @method $this setPublishDate(?string $publishDate)
+ * @method int getIsActive()
+ * @method $this setIsActive(int $isActive)
+ * @method string getAuthorName()
+ * @method $this setAuthorName(?string $authorName)
+ * @method string getMetaTitle()
+ * @method $this setMetaTitle(?string $metaTitle)
+ * @method string getMetaDescription()
+ * @method $this setMetaDescription(?string $metaDescription)
+ * @method string getMetaKeywords()
+ * @method $this setMetaKeywords(?string $metaKeywords)
+ */
+class Post extends AbstractModel
+{
+    protected function _construct(): void
+    {
+        $this->_init(ResourceModel\Post::class);
+    }
+}

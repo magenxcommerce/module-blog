@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  Magenx_Blog: a self-contained headless blog content module.
+
+  There is no stock Magento "Blog" module to wrap — this module owns its own
+  entities (post, category, tag) end to end: admin CRUD for content authoring
+  and a GraphQL surface for the storefront. No view/frontend: the storefront
+  is Next.js, and content is authored exclusively through the Magento admin.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Magenx_Blog">
+        <sequence>
+            <module name="Magento_Backend"/>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_CatalogGraphQl"/>
+            <module name="Magento_Store"/>
+        </sequence>
+    </module>
+</config>

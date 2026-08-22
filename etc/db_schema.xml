@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="magenx_blog_post" resource="default" engine="innodb" comment="Magenx Blog Post">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" identity="true" comment="Post ID"/>
+        <column xsi:type="varchar" name="title" nullable="false" length="255" comment="Title"/>
+        <column xsi:type="text" name="short_description" nullable="true" comment="Short Description"/>
+        <column xsi:type="mediumtext" name="content" nullable="true" comment="Content"/>
+        <column xsi:type="varchar" name="image" nullable="true" length="255" comment="Featured Image"/>
+        <column xsi:type="varchar" name="url_key" nullable="false" length="255" comment="URL Key"/>
+        <column xsi:type="timestamp" name="publish_date" on_update="false" nullable="true" comment="Publish Date"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="varchar" name="author_name" nullable="true" length="255" comment="Author Name"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta Title"/>
+        <column xsi:type="varchar" name="meta_description" nullable="true" length="255" comment="Meta Description"/>
+        <column xsi:type="varchar" name="meta_keywords" nullable="true" length="255" comment="Meta Keywords"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MAGENX_BLOG_POST_URL_KEY">
+            <column name="url_key"/>
+        </constraint>
+        <index referenceId="MAGENX_BLOG_POST_IS_ACTIVE_PUBLISH_DATE" indexType="btree">
+            <column name="is_active"/>
+            <column name="publish_date"/>
+        </index>
+    </table>
+
+    <table name="magenx_blog_post_store" resource="default" engine="innodb" comment="Magenx Blog Post To Store">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" comment="Post ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID; 0 = All Store Views"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_STORE_POST_ID_MAGENX_BLOG_POST_POST_ID"
+                    table="magenx_blog_post_store" column="post_id"
+                    referenceTable="magenx_blog_post" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_STORE_STORE_ID_STORE_STORE_ID"
+                    table="magenx_blog_post_store" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MAGENX_BLOG_POST_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+    </table>
+
+    <table name="magenx_blog_category" resource="default" engine="innodb" comment="Magenx Blog Category">
+        <column xsi:type="int" name="category_id" unsigned="true" nullable="false" identity="true" comment="Category ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Name"/>
+        <column xsi:type="varchar" name="url_key" nullable="false" length="255" comment="URL Key"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta Title"/>
+        <column xsi:type="varchar" name="meta_description" nullable="true" length="255" comment="Meta Description"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="int" name="position" unsigned="true" nullable="false" default="0" comment="Sort Position"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="category_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MAGENX_BLOG_CATEGORY_URL_KEY">
+            <column name="url_key"/>
+        </constraint>
+    </table>
+
+    <table name="magenx_blog_post_category" resource="default" engine="innodb" comment="Magenx Blog Post To Category">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" comment="Post ID"/>
+        <column xsi:type="int" name="category_id" unsigned="true" nullable="false" comment="Category ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="category_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_CATEGORY_POST_ID_MAGENX_BLOG_POST_POST_ID"
+                    table="magenx_blog_post_category" column="post_id"
+                    referenceTable="magenx_blog_post" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_CATEGORY_CATEGORY_ID_MAGENX_BLOG_CATEGORY_CATEGORY_ID"
+                    table="magenx_blog_post_category" column="category_id"
+                    referenceTable="magenx_blog_category" referenceColumn="category_id" onDelete="CASCADE"/>
+        <index referenceId="MAGENX_BLOG_POST_CATEGORY_CATEGORY_ID" indexType="btree">
+            <column name="category_id"/>
+        </index>
+    </table>
+
+    <table name="magenx_blog_tag" resource="default" engine="innodb" comment="Magenx Blog Tag">
+        <column xsi:type="int" name="tag_id" unsigned="true" nullable="false" identity="true" comment="Tag ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Name"/>
+        <column xsi:type="varchar" name="url_key" nullable="false" length="255" comment="URL Key"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta Title"/>
+        <column xsi:type="varchar" name="meta_description" nullable="true" length="255" comment="Meta Description"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="tag_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MAGENX_BLOG_TAG_URL_KEY">
+            <column name="url_key"/>
+        </constraint>
+    </table>
+
+    <table name="magenx_blog_post_tag" resource="default" engine="innodb" comment="Magenx Blog Post To Tag">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" comment="Post ID"/>
+        <column xsi:type="int" name="tag_id" unsigned="true" nullable="false" comment="Tag ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="tag_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_TAG_POST_ID_MAGENX_BLOG_POST_POST_ID"
+                    table="magenx_blog_post_tag" column="post_id"
+                    referenceTable="magenx_blog_post" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_TAG_TAG_ID_MAGENX_BLOG_TAG_TAG_ID"
+                    table="magenx_blog_post_tag" column="tag_id"
+                    referenceTable="magenx_blog_tag" referenceColumn="tag_id" onDelete="CASCADE"/>
+        <index referenceId="MAGENX_BLOG_POST_TAG_TAG_ID" indexType="btree">
+            <column name="tag_id"/>
+        </index>
+    </table>
+
+    <!--
+      Related products (the module's one explicit backend-config requirement).
+      product_id cascades on product delete, so a removed product prunes
+      itself out of every post's related-products list with no cron/observer
+      needed.
+    -->
+    <table name="magenx_blog_post_product" resource="default" engine="innodb" comment="Magenx Blog Post To Related Product">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" comment="Post ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="int" name="position" unsigned="true" nullable="false" default="0" comment="Sort Position"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="product_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_PRODUCT_POST_ID_MAGENX_BLOG_POST_POST_ID"
+                    table="magenx_blog_post_product" column="post_id"
+                    referenceTable="magenx_blog_post" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_PRODUCT_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="magenx_blog_post_product" column="product_id"
+                    referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="MAGENX_BLOG_POST_PRODUCT_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+
+    <table name="magenx_blog_post_related" resource="default" engine="innodb" comment="Magenx Blog Post To Related Post">
+        <column xsi:type="int" name="post_id" unsigned="true" nullable="false" comment="Post ID"/>
+        <column xsi:type="int" name="related_post_id" unsigned="true" nullable="false" comment="Related Post ID"/>
+        <column xsi:type="int" name="position" unsigned="true" nullable="false" default="0" comment="Sort Position"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="related_post_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_RELATED_POST_ID_MAGENX_BLOG_POST_POST_ID"
+                    table="magenx_blog_post_related" column="post_id"
+                    referenceTable="magenx_blog_post" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGENX_BLOG_POST_RELATED_RELATED_POST_ID_MAGENX_BLOG_POST_POST_ID"
+                    table="magenx_blog_post_related" column="related_post_id"
+                    referenceTable="magenx_blog_post" referenceColumn="post_id" onDelete="CASCADE"/>
+        <index referenceId="MAGENX_BLOG_POST_RELATED_RELATED_POST_ID" indexType="btree">
+            <column name="related_post_id"/>
+        </index>
+    </table>
+
+</schema>
