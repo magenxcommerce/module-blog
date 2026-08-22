@@ -4,42 +4,36 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Controller\Adminhtml\Tag;
 
-use Magenx\Blog\Model\ResourceModel\Tag\CollectionFactory;
 use Magenx\Blog\Model\TagRepository;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Ui\Component\MassAction\Filter;
 
+/**
+ * See Post\MassDelete: the legacy grid massaction posts a comma-separated id
+ * list, not a UI-component selection.
+ */
 class MassDelete extends Action implements HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'Magenx_Blog::tag';
 
-    private Filter $filter;
     private TagRepository $tagRepository;
-    private CollectionFactory $collectionFactory;
 
-    public function __construct(
-        Action\Context $context,
-        Filter $filter,
-        TagRepository $tagRepository,
-        CollectionFactory $collectionFactory
-    ) {
+    public function __construct(Action\Context $context, TagRepository $tagRepository)
+    {
         parent::__construct($context);
-        $this->filter = $filter;
         $this->tagRepository = $tagRepository;
-        $this->collectionFactory = $collectionFactory;
     }
 
     public function execute()
     {
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $collection = $this->filter->getCollection($this->collectionFactory->create());
+
         $deleted = 0;
-        foreach ($collection->getItems() as $tag) {
+        foreach ($this->getSelectedIds() as $tagId) {
             try {
-                $this->tagRepository->delete($this->tagRepository->getById((int) $tag->getId()));
+                $this->tagRepository->delete($this->tagRepository->getById($tagId));
                 $deleted++;
             } catch (NoSuchEntityException $e) {
                 continue;
@@ -48,8 +42,21 @@ class MassDelete extends Action implements HttpPostActionInterface
 
         if ($deleted) {
             $this->messageManager->addSuccessMessage(__('A total of %1 blog tags have been deleted.', $deleted));
+        } else {
+            $this->messageManager->addErrorMessage(__('Please select at least one blog tag to delete.'));
         }
 
         return $resultRedirect->setPath('*/*/');
+    }
+
+    /** @return int[] */
+    private function getSelectedIds(): array
+    {
+        $selected = $this->getRequest()->getParam('tag_id');
+        if (!is_array($selected)) {
+            $selected = explode(',', (string) $selected);
+        }
+
+        return array_values(array_unique(array_filter(array_map('intval', $selected))));
     }
 }

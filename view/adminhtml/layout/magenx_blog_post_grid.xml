@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
+<!--
+  AJAX fragment for the post listing grid (filter / sort / paging reloads).
+  Generic layout, so the response is the grid markup alone — no page shell.
+-->
 <layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
-    <update handle="styles"/>
-    <body>
-        <referenceContainer name="root">
-            <block class="Magenx\Blog\Block\Adminhtml\Post\Grid" name="post_index_grid" template="Magento_Backend::widget/grid.phtml"/>
-        </referenceContainer>
-    </body>
+    <container name="root">
+        <block class="Magenx\Blog\Block\Adminhtml\Post\Grid" name="post_index_grid"/>
+    </container>
 </layout>

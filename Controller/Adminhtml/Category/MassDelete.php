@@ -5,41 +5,35 @@ declare(strict_types=1);
 namespace Magenx\Blog\Controller\Adminhtml\Category;
 
 use Magenx\Blog\Model\CategoryRepository;
-use Magenx\Blog\Model\ResourceModel\Category\CollectionFactory;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Ui\Component\MassAction\Filter;
 
+/**
+ * See Post\MassDelete: the legacy grid massaction posts a comma-separated id
+ * list, not a UI-component selection.
+ */
 class MassDelete extends Action implements HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'Magenx_Blog::category';
 
-    private Filter $filter;
     private CategoryRepository $categoryRepository;
-    private CollectionFactory $collectionFactory;
 
-    public function __construct(
-        Action\Context $context,
-        Filter $filter,
-        CategoryRepository $categoryRepository,
-        CollectionFactory $collectionFactory
-    ) {
+    public function __construct(Action\Context $context, CategoryRepository $categoryRepository)
+    {
         parent::__construct($context);
-        $this->filter = $filter;
         $this->categoryRepository = $categoryRepository;
-        $this->collectionFactory = $collectionFactory;
     }
 
     public function execute()
     {
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $collection = $this->filter->getCollection($this->collectionFactory->create());
+
         $deleted = 0;
-        foreach ($collection->getItems() as $category) {
+        foreach ($this->getSelectedIds() as $categoryId) {
             try {
-                $this->categoryRepository->delete($this->categoryRepository->getById((int) $category->getId()));
+                $this->categoryRepository->delete($this->categoryRepository->getById($categoryId));
                 $deleted++;
             } catch (NoSuchEntityException $e) {
                 continue;
@@ -48,8 +42,21 @@ class MassDelete extends Action implements HttpPostActionInterface
 
         if ($deleted) {
             $this->messageManager->addSuccessMessage(__('A total of %1 blog categories have been deleted.', $deleted));
+        } else {
+            $this->messageManager->addErrorMessage(__('Please select at least one blog category to delete.'));
         }
 
         return $resultRedirect->setPath('*/*/');
+    }
+
+    /** @return int[] */
+    private function getSelectedIds(): array
+    {
+        $selected = $this->getRequest()->getParam('category_id');
+        if (!is_array($selected)) {
+            $selected = explode(',', (string) $selected);
+        }
+
+        return array_values(array_unique(array_filter(array_map('intval', $selected))));
     }
 }
