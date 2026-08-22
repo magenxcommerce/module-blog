@@ -27,7 +27,7 @@ class BlogPost implements ResolverInterface
         $this->dataMapper = $dataMapper;
     }
 
-    public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
+    public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null)
     {
         $urlKey = trim((string) ($args['urlKey'] ?? ''));
         if ($urlKey === '') {
