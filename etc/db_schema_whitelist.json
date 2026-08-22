@@ -1,0 +1,131 @@
+{
+    "magenx_blog_post": {
+        "column": {
+            "post_id": true,
+            "title": true,
+            "short_description": true,
+            "content": true,
+            "image": true,
+            "url_key": true,
+            "publish_date": true,
+            "is_active": true,
+            "author_name": true,
+            "meta_title": true,
+            "meta_description": true,
+            "meta_keywords": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "MAGENX_BLOG_POST_IS_ACTIVE_PUBLISH_DATE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_POST_URL_KEY": true
+        }
+    },
+    "magenx_blog_post_store": {
+        "column": {
+            "post_id": true,
+            "store_id": true
+        },
+        "index": {
+            "MAGENX_BLOG_POST_STORE_STORE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_POST_STORE_POST_ID_MAGENX_BLOG_POST_POST_ID": true,
+            "MAGENX_BLOG_POST_STORE_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "magenx_blog_category": {
+        "column": {
+            "category_id": true,
+            "name": true,
+            "url_key": true,
+            "description": true,
+            "meta_title": true,
+            "meta_description": true,
+            "is_active": true,
+            "position": true
+        },
+        "index": {},
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_CATEGORY_URL_KEY": true
+        }
+    },
+    "magenx_blog_post_category": {
+        "column": {
+            "post_id": true,
+            "category_id": true
+        },
+        "index": {
+            "MAGENX_BLOG_POST_CATEGORY_CATEGORY_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_POST_CATEGORY_POST_ID_MAGENX_BLOG_POST_POST_ID": true,
+            "MAGENX_BLOG_POST_CATEGORY_CATEGORY_ID_MAGENX_BLOG_CATEGORY_CATEGORY_ID": true
+        }
+    },
+    "magenx_blog_tag": {
+        "column": {
+            "tag_id": true,
+            "name": true,
+            "url_key": true,
+            "description": true,
+            "meta_title": true,
+            "meta_description": true
+        },
+        "index": {},
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_TAG_URL_KEY": true
+        }
+    },
+    "magenx_blog_post_tag": {
+        "column": {
+            "post_id": true,
+            "tag_id": true
+        },
+        "index": {
+            "MAGENX_BLOG_POST_TAG_TAG_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_POST_TAG_POST_ID_MAGENX_BLOG_POST_POST_ID": true,
+            "MAGENX_BLOG_POST_TAG_TAG_ID_MAGENX_BLOG_TAG_TAG_ID": true
+        }
+    },
+    "magenx_blog_post_product": {
+        "column": {
+            "post_id": true,
+            "product_id": true,
+            "position": true
+        },
+        "index": {
+            "MAGENX_BLOG_POST_PRODUCT_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_POST_PRODUCT_POST_ID_MAGENX_BLOG_POST_POST_ID": true,
+            "MAGENX_BLOG_POST_PRODUCT_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID": true
+        }
+    },
+    "magenx_blog_post_related": {
+        "column": {
+            "post_id": true,
+            "related_post_id": true,
+            "position": true
+        },
+        "index": {
+            "MAGENX_BLOG_POST_RELATED_RELATED_POST_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGENX_BLOG_POST_RELATED_POST_ID_MAGENX_BLOG_POST_POST_ID": true,
+            "MAGENX_BLOG_POST_RELATED_RELATED_POST_ID_MAGENX_BLOG_POST_POST_ID": true
+        }
+    }
+}

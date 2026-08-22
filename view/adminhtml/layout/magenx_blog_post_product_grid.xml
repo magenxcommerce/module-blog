@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
+    <update handle="styles"/>
+    <body>
+        <referenceContainer name="root">
+            <block class="Magenx\Blog\Block\Adminhtml\Post\Product\Chooser" name="post_product.chooser.grid" template="Magento_Backend::widget/grid.phtml"/>
+        </referenceContainer>
+    </body>
+</layout>

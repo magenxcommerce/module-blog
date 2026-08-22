@@ -1,0 +1,22 @@
+{
+    "name": "magenx/module-blog",
+    "description": "Minimal headless blog content module: posts, categories, tags, related posts and related products, exposed over GraphQL for a Next.js storefront. No Luma frontend.",
+    "type": "magento2-module",
+    "license": "MIT",
+    "require": {
+        "php": "~8.1.0||~8.2.0||~8.3.0||~8.4.0",
+        "magento/framework": "*",
+        "magento/module-backend": "*",
+        "magento/module-catalog": "*",
+        "magento/module-catalog-graph-ql": "*",
+        "magento/module-store": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magenx\\Blog\\": ""
+        }
+    }
+}
