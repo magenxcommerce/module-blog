@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/magenxcommerce/module-blog/compare/v1.0.3...v1.0.4) (2026-08-22)
+
+
+### Bug Fixes
+
+* Forward Widget\Tabs required constructor dependencies ([#9](https://github.com/magenxcommerce/module-blog/issues/9)) ([6678f3e](https://github.com/magenxcommerce/module-blog/commit/6678f3ebd7855dc40871b8a8a0e44924d378da77))
+
 ## [1.0.3](https://github.com/magenxcommerce/module-blog/compare/v1.0.2...v1.0.3) (2026-08-22)
 
 
