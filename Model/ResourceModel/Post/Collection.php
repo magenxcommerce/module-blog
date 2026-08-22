@@ -30,7 +30,7 @@ class Collection extends AbstractCollection
         ManagerInterface $eventManager,
         DateTime $dateTime,
         $connection = null,
-        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
+        ?\Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
         $this->dateTime = $dateTime;

@@ -20,7 +20,7 @@ class BlogCategories implements ResolverInterface
         $this->dataMapper = $dataMapper;
     }
 
-    public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
+    public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null)
     {
         $items = [];
         foreach ($this->categoryRepository->getActiveList() as $category) {

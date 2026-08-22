@@ -26,7 +26,7 @@ class BlogPosts implements ResolverInterface
         $this->dataMapper = $dataMapper;
     }
 
-    public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
+    public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null)
     {
         /** @var ContextInterface $context */
         $storeId = (int) $context->getExtensionAttributes()->getStore()->getId();
