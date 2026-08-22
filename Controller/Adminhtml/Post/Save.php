@@ -68,8 +68,13 @@ class Save extends Action implements HttpPostActionInterface
         $post->setData('tag_ids', $this->toIntArray($data['tag_ids'] ?? []));
         $post->setData('store_ids', $this->toIntArray($data['store_ids'] ?? [0]));
 
-        $relatedIds = $this->toIntArray($data['related_post_ids'] ?? []);
-        $post->setData('related_post_positions', array_combine($relatedIds, range(0, count($relatedIds) - 1)) ?: []);
+        // Flipping the posted list gives [postId => position] directly, and is
+        // empty-safe — array_combine() with range(0, -1) throws when nothing is
+        // selected, which is the common case.
+        $post->setData(
+            'related_post_positions',
+            array_flip($this->toIntArray($data['related_post_ids'] ?? []))
+        );
 
         try {
             if ($post->getTitle() === '') {
@@ -83,12 +88,10 @@ class Save extends Action implements HttpPostActionInterface
             $this->messageManager->addSuccessMessage(__('The blog post has been saved.'));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-            $this->getDataPersistor()->set('magenx_blog_post', $data);
 
             return $resultRedirect->setPath('*/*/edit', ['post_id' => $postId ?: null]);
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__('Something went wrong while saving the blog post.'));
-            $this->getDataPersistor()->set('magenx_blog_post', $data);
 
             return $resultRedirect->setPath('*/*/edit', ['post_id' => $postId ?: null]);
         }
@@ -108,10 +111,5 @@ class Save extends Action implements HttpPostActionInterface
         }
 
         return array_values(array_filter(array_map('intval', $value)));
-    }
-
-    private function getDataPersistor(): \Magento\Framework\App\Request\DataPersistorInterface
-    {
-        return $this->_objectManager->get(\Magento\Framework\App\Request\DataPersistorInterface::class);
     }
 }

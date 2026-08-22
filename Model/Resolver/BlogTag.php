@@ -7,7 +7,7 @@ namespace Magenx\Blog\Model\Resolver;
 use Magenx\Blog\Model\TagRepository;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
-use Magento\Framework\GraphQl\Query\Resolver\ResolverInterface;
+use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
 class BlogTag implements ResolverInterface
