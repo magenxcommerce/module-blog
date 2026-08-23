@@ -24,9 +24,22 @@ class Config
         $this->scopeConfig = $scopeConfig;
     }
 
+    /**
+     * Deliberately not isSetFlag(): that reports "off" both when a merchant
+     * turned the blog off and when the path is missing entirely, which is what
+     * a stale `config` cache after a module update looks like. A missing path
+     * therefore falls back to the config.xml default (on) — the storefront blog
+     * cannot go dark because a cache is behind. An explicit 0 still disables it.
+     */
     public function isEnabled(?int $storeId = null): bool
     {
-        return $this->scopeConfig->isSetFlag(self::XML_PATH_ENABLED, ScopeInterface::SCOPE_STORE, $storeId);
+        $value = $this->scopeConfig->getValue(self::XML_PATH_ENABLED, ScopeInterface::SCOPE_STORE, $storeId);
+
+        if ($value === null || $value === '') {
+            return true;
+        }
+
+        return (bool) (int) $value;
     }
 
     public function getPostsPerPage(?int $storeId = null): int
