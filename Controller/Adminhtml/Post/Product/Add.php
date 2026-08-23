@@ -46,6 +46,6 @@ class Add extends Action implements HttpGetActionInterface
             }
         }
 
-        return $resultRedirect->setPath('*/*/index', ['post_id' => $postId]);
+        return $resultRedirect->setPath('*/*/grid', ['post_id' => $postId]);
     }
 }

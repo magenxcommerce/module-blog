@@ -47,7 +47,16 @@ class Post extends AbstractDb
 
     public function saveStoreIds(int $postId, array $storeIds): void
     {
-        $this->replaceRelation('magenx_blog_post_store', 'post_id', $postId, 'store_id', array_map('intval', $storeIds));
+        // $allowZero: store_id 0 is "All Store Views", a real assignment — the
+        // other relations hold entity ids, where 0 only ever means "nothing".
+        $this->replaceRelation(
+            'magenx_blog_post_store',
+            'post_id',
+            $postId,
+            'store_id',
+            array_map('intval', $storeIds),
+            true
+        );
     }
 
     public function getStoreIds(int $postId): array
@@ -180,12 +189,27 @@ class Post extends AbstractDb
         return $result;
     }
 
-    private function replaceRelation(string $table, string $ownerColumn, int $ownerId, string $relatedColumn, array $relatedIds): void
-    {
+    /**
+     * @param bool $allowZero Keep a related id of 0. Only magenx_blog_post_store
+     *     wants this — its 0 is the "All Store Views" assignment, and dropping
+     *     it left posts with no store rows at all, invisible to the storefront
+     *     collection's inner join while still listed in the admin grid.
+     */
+    private function replaceRelation(
+        string $table,
+        string $ownerColumn,
+        int $ownerId,
+        string $relatedColumn,
+        array $relatedIds,
+        bool $allowZero = false
+    ): void {
         $connection = $this->getConnection();
         $connection->delete($this->getTable($table), [$ownerColumn . ' = ?' => $ownerId]);
 
-        $relatedIds = array_values(array_unique(array_filter($relatedIds, static fn ($id) => $id > 0)));
+        $minimum = $allowZero ? 0 : 1;
+        $relatedIds = array_values(
+            array_unique(array_filter($relatedIds, static fn ($id) => $id >= $minimum))
+        );
         if (!$relatedIds) {
             return;
         }

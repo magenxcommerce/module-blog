@@ -68,6 +68,11 @@ bin/magento setup:upgrade
   development; admin CRUD and the GraphQL surface still need a live
   `setup:upgrade` + manual smoke test (create a post, attach products,
   query `blogPost` from the storefront).
+- Saving a post, category or tag cleans its `magenx_blog_*` cache tags, so
+  Magento's own cache invalidation PURGEs the storefront and the blog pages
+  revalidate immediately rather than after the storefront's 30-minute blog
+  TTL. The storefront maps those identities to its coarse `blog` tag in
+  `apps/theme/src/app/api/revalidate/route.ts`.
 - Post HTML is stored exactly as authored — there is no server-side
   sanitization. The Next.js storefront sanitizes `post_content` and
   `short_description` on read (`sanitizeCmsHtml`, `packages/engine`); a
