@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/magenxcommerce/module-blog/compare/v1.0.4...v1.0.5) (2026-08-23)
+
+
+### Bug Fixes
+
+* Drop Widget\Tabs constructor override entirely ([#11](https://github.com/magenxcommerce/module-blog/issues/11)) ([5dfe1ae](https://github.com/magenxcommerce/module-blog/commit/5dfe1ae9265079f673eb79c797e9e0120f5b96ee))
+
 ## [1.0.4](https://github.com/magenxcommerce/module-blog/compare/v1.0.3...v1.0.4) (2026-08-22)
 
 
