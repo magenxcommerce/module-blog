@@ -4,32 +4,18 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Block\Adminhtml\Post\Edit;
 
-use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Tabs as WidgetTabs;
-use Magento\Backend\Model\Auth\Session;
-use Magento\Framework\Json\EncoderInterface;
-use Magento\Framework\Registry;
 
+/**
+ * Deliberately declares NO constructor: Widget\Tabs takes injected
+ * dependencies whose order has changed between Magento versions, and any
+ * override here has to forward them exactly or di:compile rejects the class.
+ * The only thing this block needed the registry for was "is there a saved
+ * post?", which the request answers directly — so there is nothing to inject
+ * and nothing to keep in sync with the parent.
+ */
 class Tabs extends WidgetTabs
 {
-    private Registry $coreRegistry;
-
-    /**
-     * Widget\Tabs requires the auth session and JSON encoder in positions 2
-     * and 3 — they must be accepted and forwarded, not skipped, or $data
-     * lands on a dependency slot and di:compile rejects the constructor.
-     */
-    public function __construct(
-        Context $context,
-        Session $authSession,
-        EncoderInterface $jsonEncoder,
-        Registry $registry,
-        array $data = []
-    ) {
-        $this->coreRegistry = $registry;
-        parent::__construct($context, $authSession, $jsonEncoder, $data);
-    }
-
     protected function _construct(): void
     {
         parent::_construct();
@@ -59,24 +45,22 @@ class Tabs extends WidgetTabs
             'content' => $this->getLayout()->createBlock(\Magenx\Blog\Block\Adminhtml\Post\Edit\Tab\Taxonomy::class)->toHtml(),
         ]);
 
-        $post = $this->coreRegistry->registry('magenx_blog_post');
-        if ($post && $post->getId()) {
-            $this->addTab('related_products', [
-                'label' => __('Related Products'),
-                'title' => __('Related Products'),
-                'content' => $this->getLayout()
+        // Related products are stored against a post id, so the tab can only
+        // render once the post exists. The Edit controller redirects away when
+        // the id does not resolve, so a post_id present here means saved.
+        $postId = (int) $this->getRequest()->getParam('post_id');
+
+        $this->addTab('related_products', [
+            'label' => __('Related Products'),
+            'title' => __('Related Products'),
+            'content' => $postId
+                ? $this->getLayout()
                     ->createBlock(\Magenx\Blog\Block\Adminhtml\Post\Edit\Tab\RelatedProducts::class)
-                    ->toHtml(),
-            ]);
-        } else {
-            $this->addTab('related_products', [
-                'label' => __('Related Products'),
-                'title' => __('Related Products'),
-                'content' => '<div class="message message-notice">'
+                    ->toHtml()
+                : '<div class="message message-notice">'
                     . __('Save the post before assigning related products.')->render()
                     . '</div>',
-            ]);
-        }
+        ]);
 
         $this->addTab('related_posts', [
             'label' => __('Related Posts'),
