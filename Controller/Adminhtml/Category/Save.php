@@ -6,6 +6,7 @@ namespace Magenx\Blog\Controller\Adminhtml\Category;
 
 use Magenx\Blog\Model\CategoryFactory;
 use Magenx\Blog\Model\CategoryRepository;
+use Magenx\Blog\Model\UrlKey;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
@@ -16,17 +17,20 @@ class Save extends Action implements HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'Magenx_Blog::category';
 
+    private UrlKey $urlKey;
     private CategoryRepository $categoryRepository;
     private CategoryFactory $categoryFactory;
 
     public function __construct(
         Action\Context $context,
         CategoryRepository $categoryRepository,
-        CategoryFactory $categoryFactory
+        CategoryFactory $categoryFactory,
+        UrlKey $urlKey
     ) {
         parent::__construct($context);
         $this->categoryRepository = $categoryRepository;
         $this->categoryFactory = $categoryFactory;
+        $this->urlKey = $urlKey;
     }
 
     public function execute()
@@ -49,7 +53,10 @@ class Save extends Action implements HttpPostActionInterface
 
         $category->addData([
             'name' => trim((string) ($data['name'] ?? '')),
-            'url_key' => trim((string) ($data['url_key'] ?? '')),
+            'url_key' => $this->urlKey->normalize(
+                (string) ($data['url_key'] ?? ''),
+                (string) ($data['name'] ?? '')
+            ),
             'description' => $data['description'] ?? null,
             'meta_title' => $data['meta_title'] ?? null,
             'meta_description' => $data['meta_description'] ?? null,
