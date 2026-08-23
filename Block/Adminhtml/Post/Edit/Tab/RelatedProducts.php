@@ -110,9 +110,15 @@ class RelatedProducts extends Extended
         return $this->getUrl('*/post/edit', ['post_id' => $this->getPostId(), '_current' => true]);
     }
 
+    /**
+     * The chooser grid as a layout fragment, loaded straight into the modal.
+     * Not a standalone page: an admin page rendered in an iframe re-bootstraps
+     * RequireJS, and the legacy grid stack (prototype, jquery-ui-modules/*)
+     * only resolves through the requirejs-config map this document already has.
+     */
     public function getAddProductsUrl(): string
     {
-        return $this->getUrl('*/post_product/index', ['post_id' => $this->getPostId()]);
+        return $this->getUrl('*/post_product/grid', ['post_id' => $this->getPostId()]);
     }
 
     protected function _toHtml()
@@ -122,6 +128,7 @@ class RelatedProducts extends Extended
                 'Magenx_Blog/js/related-products-modal' => [
                     'url' => $this->getAddProductsUrl(),
                     'title' => __('Add Products')->render(),
+                    'errorMessage' => __('Could not load the product list.')->render(),
                 ],
             ],
         ], JSON_UNESCAPED_SLASHES);

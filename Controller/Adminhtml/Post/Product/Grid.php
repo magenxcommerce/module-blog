@@ -8,7 +8,7 @@ use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 
-/** AJAX reload endpoint for the chooser grid (filter/sort/paging inside the modal iframe). */
+/** The chooser grid as a layout fragment: the modal's initial load, and its filter/sort/paging reloads. */
 class Grid extends Action implements HttpGetActionInterface
 {
     public const ADMIN_RESOURCE = 'Magenx_Blog::post';
