@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.6](https://github.com/magenxcommerce/module-blog/compare/v1.0.5...v1.0.6) (2026-08-23)
+
+
+### Bug Fixes
+
+* Add blog configuration and fix tabbed post edit form ([#13](https://github.com/magenxcommerce/module-blog/issues/13)) ([9f7144d](https://github.com/magenxcommerce/module-blog/commit/9f7144d192e5314f0c5bd4087656c37df1797034))
+* full-width admin grids, one form on post edit, add config section ([9f7144d](https://github.com/magenxcommerce/module-blog/commit/9f7144d192e5314f0c5bd4087656c37df1797034))
+
 ## [1.0.5](https://github.com/magenxcommerce/module-blog/compare/v1.0.4...v1.0.5) (2026-08-23)
 
 
