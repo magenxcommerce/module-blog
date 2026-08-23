@@ -6,6 +6,7 @@ namespace Magenx\Blog\Controller\Adminhtml\Tag;
 
 use Magenx\Blog\Model\TagFactory;
 use Magenx\Blog\Model\TagRepository;
+use Magenx\Blog\Model\UrlKey;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
@@ -18,12 +19,18 @@ class Save extends Action implements HttpPostActionInterface
 
     private TagRepository $tagRepository;
     private TagFactory $tagFactory;
+    private UrlKey $urlKey;
 
-    public function __construct(Action\Context $context, TagRepository $tagRepository, TagFactory $tagFactory)
-    {
+    public function __construct(
+        Action\Context $context,
+        TagRepository $tagRepository,
+        TagFactory $tagFactory,
+        UrlKey $urlKey
+    ) {
         parent::__construct($context);
         $this->tagRepository = $tagRepository;
         $this->tagFactory = $tagFactory;
+        $this->urlKey = $urlKey;
     }
 
     public function execute()
@@ -46,7 +53,10 @@ class Save extends Action implements HttpPostActionInterface
 
         $tag->addData([
             'name' => trim((string) ($data['name'] ?? '')),
-            'url_key' => trim((string) ($data['url_key'] ?? '')),
+            'url_key' => $this->urlKey->normalize(
+                (string) ($data['url_key'] ?? ''),
+                (string) ($data['name'] ?? '')
+            ),
             'description' => $data['description'] ?? null,
             'meta_title' => $data['meta_title'] ?? null,
             'meta_description' => $data['meta_description'] ?? null,

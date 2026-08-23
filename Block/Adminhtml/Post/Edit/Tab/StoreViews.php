@@ -64,7 +64,12 @@ class StoreViews extends Generic
 
         if ($post) {
             $values = $post->getData();
-            $values['store_ids'] = $postId ? $this->postRepository->getStoreIds($postId) : [0];
+            // A saved post with no rows in magenx_blog_post_store predates the
+            // store-id fix in the Save controller; show it as "All Store Views"
+            // so re-saving repairs it in one click instead of tripping the
+            // required-field validator on an empty selection.
+            $storeIds = $postId ? $this->postRepository->getStoreIds($postId) : [];
+            $values['store_ids'] = $storeIds ?: [0];
             $form->setValues($values);
         }
 

@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="popup">
+<!--
+  "Add Products" chooser, opened in a modal iframe from the Related Products
+  tab. admin-empty is the only chrome-less adminhtml page layout there is —
+  Magento_Theme registers exactly admin-empty / admin-1column /
+  admin-2columns-left, so the "popup" layout this used to ask for resolved to
+  nothing and the iframe rendered a blank page.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="admin-empty">
     <body>
         <referenceContainer name="content">
             <block class="Magenx\Blog\Block\Adminhtml\Post\Product\Chooser" name="post_product.chooser.grid"/>

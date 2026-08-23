@@ -44,7 +44,7 @@ class General extends Generic
             'label' => __('URL Key'),
             'title' => __('URL Key'),
             'required' => true,
-            'note' => __('Used to build the post\'s storefront URL. Letters, numbers and hyphens only.'),
+            'note' => __('Used to build the post\'s storefront URL. Normalized on save — lowercased, spaces and punctuation become hyphens. Left empty, it is derived from the title.'),
         ]);
 
         $fieldset->addField('is_active', 'select', [

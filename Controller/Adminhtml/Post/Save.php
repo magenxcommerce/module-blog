@@ -6,6 +6,7 @@ namespace Magenx\Blog\Controller\Adminhtml\Post;
 
 use Magenx\Blog\Model\PostFactory;
 use Magenx\Blog\Model\PostRepository;
+use Magenx\Blog\Model\UrlKey;
 use Magento\Backend\App\Action;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -19,15 +20,18 @@ class Save extends Action implements HttpPostActionInterface
 
     private PostRepository $postRepository;
     private PostFactory $postFactory;
+    private UrlKey $urlKey;
 
     public function __construct(
         Action\Context $context,
         PostRepository $postRepository,
-        PostFactory $postFactory
+        PostFactory $postFactory,
+        UrlKey $urlKey
     ) {
         parent::__construct($context);
         $this->postRepository = $postRepository;
         $this->postFactory = $postFactory;
+        $this->urlKey = $urlKey;
     }
 
     public function execute()
@@ -55,7 +59,10 @@ class Save extends Action implements HttpPostActionInterface
             'short_description' => $data['short_description'] ?? null,
             'content' => $data['content'] ?? null,
             'image' => $data['image'] ?? null,
-            'url_key' => trim((string) ($data['url_key'] ?? '')),
+            'url_key' => $this->urlKey->normalize(
+                (string) ($data['url_key'] ?? ''),
+                (string) ($data['title'] ?? '')
+            ),
             'publish_date' => $data['publish_date'] ?? null,
             'is_active' => (int) ($data['is_active'] ?? 0),
             'author_name' => $data['author_name'] ?? null,
@@ -66,7 +73,7 @@ class Save extends Action implements HttpPostActionInterface
 
         $post->setData('category_ids', $this->toIntArray($data['category_ids'] ?? []));
         $post->setData('tag_ids', $this->toIntArray($data['tag_ids'] ?? []));
-        $post->setData('store_ids', $this->toIntArray($data['store_ids'] ?? [0]));
+        $post->setData('store_ids', $this->toStoreIds($data['store_ids'] ?? null));
 
         // Flipping the posted list gives [postId => position] directly, and is
         // empty-safe — array_combine() with range(0, -1) throws when nothing is
@@ -101,6 +108,28 @@ class Save extends Action implements HttpPostActionInterface
         }
 
         return $resultRedirect->setPath('*/*/');
+    }
+
+    /**
+     * Store ids need their own normalization: 0 means "All Store Views" and is
+     * a real, selectable value, but toIntArray()'s array_filter() treats it as
+     * empty and drops it. That left every post saved with the default
+     * selection with no rows in magenx_blog_post_store — and since the
+     * storefront collection inner-joins that table, such a post is invisible
+     * on the storefront while still listed in the admin grid. Nothing posted
+     * also means all store views.
+     *
+     * @return int[]
+     */
+    private function toStoreIds($value): array
+    {
+        if (!is_array($value)) {
+            return [0];
+        }
+
+        $ids = array_values(array_unique(array_map('intval', $value)));
+
+        return $ids ?: [0];
     }
 
     /** @return int[] */

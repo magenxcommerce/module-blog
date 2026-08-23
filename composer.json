@@ -9,6 +9,8 @@
         "magento/module-backend": "*",
         "magento/module-catalog": "*",
         "magento/module-catalog-graph-ql": "*",
+        "magento/module-cms": "*",
+        "magento/module-config": "*",
         "magento/module-graph-ql": "*",
         "magento/module-store": "*"
     },
