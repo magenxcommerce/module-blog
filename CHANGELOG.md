@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/magenxcommerce/module-blog/compare/v1.0.6...v1.0.7) (2026-08-23)
+
+
+### Bug Fixes
+
+* Blog post sore id null ([#15](https://github.com/magenxcommerce/module-blog/issues/15)) ([ec7c751](https://github.com/magenxcommerce/module-blog/commit/ec7c751b5c5bad20bb131e4d1d68e86355c4484f))
+
 ## [1.0.6](https://github.com/magenxcommerce/module-blog/compare/v1.0.5...v1.0.6) (2026-08-23)
 
 
