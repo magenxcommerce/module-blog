@@ -31,6 +31,19 @@ grid (checkbox selection + editable position), the same pattern core
 Magento uses for assigning products to a category — not a free-text SKU
 field — persisted to `magenx_blog_post_product` on save.
 
+## Configuration
+
+Stores > Configuration > **Magenx > Blog > General** (ACL:
+`Magenx_Blog::config`):
+
+| Field | Default | Effect |
+| --- | --- | --- |
+| Enable Blog | Yes | When No, `blogPosts` / `blogPost` / `blogTag` / `blogCategories` resolve to empty results for that store; no data is removed |
+| Posts Per Page | 10 | Page size `blogPosts` uses when the query omits `pageSize` |
+| Maximum Page Size | 50 | Upper bound a `blogPosts` query may request; larger values are clamped |
+
+All three are store-scoped and read through `Magenx\Blog\Model\Config`.
+
 ## GraphQL
 
 `Query.blogPosts(filter, pageSize, currentPage)`, `Query.blogPost(urlKey)`,

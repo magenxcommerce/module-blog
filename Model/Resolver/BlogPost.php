@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Model\Resolver;
 
+use Magenx\Blog\Model\Config;
 use Magenx\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
@@ -20,11 +21,13 @@ class BlogPost implements ResolverInterface
 {
     private CollectionFactory $collectionFactory;
     private DataMapper $dataMapper;
+    private Config $config;
 
-    public function __construct(CollectionFactory $collectionFactory, DataMapper $dataMapper)
+    public function __construct(CollectionFactory $collectionFactory, DataMapper $dataMapper, Config $config)
     {
         $this->collectionFactory = $collectionFactory;
         $this->dataMapper = $dataMapper;
+        $this->config = $config;
     }
 
     public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null)
@@ -36,6 +39,10 @@ class BlogPost implements ResolverInterface
 
         /** @var ContextInterface $context */
         $storeId = (int) $context->getExtensionAttributes()->getStore()->getId();
+
+        if (!$this->config->isEnabled($storeId)) {
+            return null;
+        }
 
         $collection = $this->collectionFactory->create();
         $collection->addPublishedFilter();

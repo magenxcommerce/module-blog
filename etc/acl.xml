@@ -10,6 +10,13 @@
                         <resource id="Magenx_Blog::tag" title="Tags" sortOrder="30"/>
                     </resource>
                 </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magenx_Blog::config" title="Blog Section" sortOrder="50"/>
+                        </resource>
+                    </resource>
+                </resource>
             </resource>
         </resources>
     </acl>

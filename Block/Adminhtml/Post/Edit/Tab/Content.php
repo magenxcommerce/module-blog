@@ -22,8 +22,11 @@ class Content extends Generic
     {
         $post = $this->_coreRegistry->registry('magenx_blog_post');
 
-        $form = $this->_formFactory->create(['data' => ['id' => 'edit_form', 'method' => 'post']]);
-        $form->setUseContainer(true);
+        $form = $this->_formFactory->create(['data' => ['id' => 'post_edit_content_form']]);
+        // No form container: the tabs widget moves this content into the page's
+        // single <form id="edit_form">, so a nested form here would both split
+        // the POST across tabs and break the move (HierarchyRequestError).
+        $form->setUseContainer(false);
         $this->setForm($form);
 
         $fieldset = $form->addFieldset('content_fieldset', ['legend' => __('Content')]);

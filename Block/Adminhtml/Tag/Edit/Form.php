@@ -18,7 +18,7 @@ class Form extends Generic
     {
         $tag = $this->_coreRegistry->registry('magenx_blog_tag');
 
-        $form = $this->_formFactory->create(['data' => ['id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post']]);
+        $form = $this->_formFactory->create(['data' => ['id' => 'edit_form', 'action' => $this->getUrl('*/*/save'), 'method' => 'post']]);
         $form->setUseContainer(true);
         $this->setForm($form);
 
