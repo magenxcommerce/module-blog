@@ -42,7 +42,7 @@ type BlogPost @doc(description: "A blog post.") {
     post_id: Int! @doc(description: "The post's unique ID.")
     name: String! @doc(description: "The post title.")
     short_description: String @doc(description: "A short summary shown on listing cards.")
-    post_content: String @doc(description: "The full post body, stored and returned as HTML. Sanitize before rendering, the same as any other rich-text field.")
+    post_content: String @doc(description: "The full post body, authored in the admin WYSIWYG and returned as HTML exactly as stored. Nothing is sanitized server-side; the Next.js storefront runs it through sanitizeCmsHtml on read, and any other consumer must sanitize before rendering.")
     image: String @doc(description: "The featured image URL, or null when none is set.")
     url_key: String! @doc(description: "The URL key used to build the post's storefront URL.")
     publish_date: String @doc(description: "The publish date, or null when unset.")

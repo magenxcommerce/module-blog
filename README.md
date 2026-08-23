@@ -26,7 +26,10 @@ This module owns its own entities end to end. There is no stock Magento
 
 Content > Blog: Posts, Categories, Tags. Post edit is a tabbed form —
 General, Content, Categories & Tags, Related Products, Related Posts,
-Meta/SEO, Store Views. The Related Products tab is a searchable product
+Meta/SEO, Store Views. Post Content uses the standard admin WYSIWYG
+(TinyMCE + media browser, hence the `Magento_Cms` dependency); it degrades to
+a textarea when WYSIWYG is disabled in Content > Design > Configuration.
+The Related Products tab is a searchable product
 grid (checkbox selection + editable position), the same pattern core
 Magento uses for assigning products to a category — not a free-text SKU
 field — persisted to `magenx_blog_post_product` on save.
@@ -65,5 +68,9 @@ bin/magento setup:upgrade
   development; admin CRUD and the GraphQL surface still need a live
   `setup:upgrade` + manual smoke test (create a post, attach products,
   query `blogPost` from the storefront).
+- Post HTML is stored exactly as authored — there is no server-side
+  sanitization. The Next.js storefront sanitizes `post_content` and
+  `short_description` on read (`sanitizeCmsHtml`, `packages/engine`); a
+  different consumer of the GraphQL surface has to do its own.
 - Categories and tags are flat lists (no hierarchy) — matches how the
   storefront actually consumes them.
