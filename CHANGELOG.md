@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/magenxcommerce/module-blog/compare/v1.0.7...v1.0.8) (2026-08-23)
+
+
+### Bug Fixes
+
+* Blog post design  ([#17](https://github.com/magenxcommerce/module-blog/issues/17)) ([0cccbe4](https://github.com/magenxcommerce/module-blog/commit/0cccbe472ddd5dfe398bd7348eeb90daec957326))
+
 ## [1.0.7](https://github.com/magenxcommerce/module-blog/compare/v1.0.6...v1.0.7) (2026-08-23)
 
 
