@@ -40,8 +40,11 @@ class StoreViews extends Generic
         $post = $this->_coreRegistry->registry('magenx_blog_post');
         $postId = $post ? (int) $post->getId() : 0;
 
-        $form = $this->_formFactory->create(['data' => ['id' => 'edit_form', 'method' => 'post']]);
-        $form->setUseContainer(true);
+        $form = $this->_formFactory->create(['data' => ['id' => 'post_edit_store_views_form']]);
+        // No form container: the tabs widget moves this content into the page's
+        // single <form id="edit_form">, so a nested form here would both split
+        // the POST across tabs and break the move (HierarchyRequestError).
+        $form->setUseContainer(false);
         $this->setForm($form);
 
         $fieldset = $form->addFieldset('store_views_fieldset', ['legend' => __('Store Views')]);

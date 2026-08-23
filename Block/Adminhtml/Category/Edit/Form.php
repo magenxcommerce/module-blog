@@ -18,7 +18,7 @@ class Form extends Generic
     {
         $category = $this->_coreRegistry->registry('magenx_blog_category');
 
-        $form = $this->_formFactory->create(['data' => ['id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post']]);
+        $form = $this->_formFactory->create(['data' => ['id' => 'edit_form', 'action' => $this->getUrl('*/*/save'), 'method' => 'post']]);
         $form->setUseContainer(true);
         $this->setForm($form);
 

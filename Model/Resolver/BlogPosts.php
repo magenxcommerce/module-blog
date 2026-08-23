@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Model\Resolver;
 
+use Magenx\Blog\Model\Config;
 use Magenx\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
@@ -19,18 +20,28 @@ class BlogPosts implements ResolverInterface
 {
     private CollectionFactory $collectionFactory;
     private DataMapper $dataMapper;
+    private Config $config;
 
-    public function __construct(CollectionFactory $collectionFactory, DataMapper $dataMapper)
+    public function __construct(CollectionFactory $collectionFactory, DataMapper $dataMapper, Config $config)
     {
         $this->collectionFactory = $collectionFactory;
         $this->dataMapper = $dataMapper;
+        $this->config = $config;
     }
 
     public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null)
     {
         /** @var ContextInterface $context */
         $storeId = (int) $context->getExtensionAttributes()->getStore()->getId();
-        $pageSize = isset($args['pageSize']) ? max(1, (int) $args['pageSize']) : 10;
+
+        if (!$this->config->isEnabled($storeId)) {
+            return ['total_count' => 0, 'items' => []];
+        }
+
+        $pageSize = isset($args['pageSize'])
+            ? max(1, (int) $args['pageSize'])
+            : $this->config->getPostsPerPage($storeId);
+        $pageSize = min($pageSize, $this->config->getMaxPageSize($storeId));
         $currentPage = isset($args['currentPage']) ? max(1, (int) $args['currentPage']) : 1;
         $filter = (array) ($args['filter'] ?? []);
 

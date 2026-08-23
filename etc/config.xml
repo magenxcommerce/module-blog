@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <magenx_blog>
+            <general>
+                <!-- On by default: the queries return nothing until posts exist,
+                     so there is no warm-up or external setup to wait for. -->
+                <enabled>1</enabled>
+                <posts_per_page>10</posts_per_page>
+                <max_page_size>50</max_page_size>
+            </general>
+        </magenx_blog>
+    </default>
+</config>
