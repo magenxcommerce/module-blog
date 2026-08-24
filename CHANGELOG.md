@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.9](https://github.com/magenxcommerce/module-blog/compare/v1.0.8...v1.0.9) (2026-08-24)
+
+
+### Bug Fixes
+
+* add headline image field and fix related-products chooser 404 ([71dbdad](https://github.com/magenxcommerce/module-blog/commit/71dbdad8b0cfc2c9c83a9f69ca1521d875a896b9))
+* Add headline image upload functionality to blog posts ([#19](https://github.com/magenxcommerce/module-blog/issues/19)) ([71dbdad](https://github.com/magenxcommerce/module-blog/commit/71dbdad8b0cfc2c9c83a9f69ca1521d875a896b9))
+
 ## [1.0.8](https://github.com/magenxcommerce/module-blog/compare/v1.0.7...v1.0.8) (2026-08-23)
 
 
