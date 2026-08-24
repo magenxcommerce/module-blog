@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Block\Adminhtml\Post\Edit\Tab;
 
-use Magenx\Blog\Model\MediaUrl;
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Form\Generic;
 use Magento\Cms\Helper\Wysiwyg\Images as ImagesHelper;
@@ -95,12 +94,7 @@ class Content extends Generic
         ]);
 
         if ($post) {
-            $values = $post->getData();
-            // The image element renders its preview straight from the value, so
-            // it needs a URL — the column stores a media-relative path. Only
-            // the form's copy is rewritten; the post itself keeps the path.
-            $values['image'] = $this->mediaUrl->toUrl($post->getImage());
-            $form->setValues($values);
+            $form->setValues($post->getData());
         }
 
         return parent::_prepareForm();

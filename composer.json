@@ -12,7 +12,6 @@
         "magento/module-cms": "*",
         "magento/module-config": "*",
         "magento/module-graph-ql": "*",
-        "magento/module-media-storage": "*",
         "magento/module-store": "*"
     },
     "autoload": {
