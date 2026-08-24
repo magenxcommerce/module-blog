@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.12](https://github.com/magenxcommerce/module-blog/compare/v1.0.11...v1.0.12) (2026-08-24)
+
+
+### Bug Fixes
+
+* carry post_id into the related-product row action URLs ([448a5d7](https://github.com/magenxcommerce/module-blog/commit/448a5d7be8bd1ca27283f5e9e8836303628b674e))
+* Fix row action parameters in related products grid ([#25](https://github.com/magenxcommerce/module-blog/issues/25)) ([448a5d7](https://github.com/magenxcommerce/module-blog/commit/448a5d7be8bd1ca27283f5e9e8836303628b674e))
+
 ## [1.0.11](https://github.com/magenxcommerce/module-blog/compare/v1.0.10...v1.0.11) (2026-08-24)
 
 
