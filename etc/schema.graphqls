@@ -43,7 +43,7 @@ type BlogPost @doc(description: "A blog post.") {
     name: String! @doc(description: "The post title.")
     short_description: String @doc(description: "A short summary shown on listing cards.")
     post_content: String @doc(description: "The full post body, authored in the admin WYSIWYG and returned as HTML exactly as stored. Nothing is sanitized server-side; the Next.js storefront runs it through sanitizeCmsHtml on read, and any other consumer must sanitize before rendering.")
-    image: String @doc(description: "The featured image URL, or null when none is set.")
+    image: String @doc(description: "The headline image as a media path rooted at the store's media base — \"/media/blog/hero.jpg\", exactly as the admin media gallery inserted it — or null when none is set. Deliberately host-less: in a headless setup the storefront serves media from its own /media route, not from the Magento host.")
     url_key: String! @doc(description: "The URL key used to build the post's storefront URL.")
     publish_date: String @doc(description: "The publish date, or null when unset.")
     author_name: String @doc(description: "The display name of the post's author, or null when unset.")
