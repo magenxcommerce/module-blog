@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.11](https://github.com/magenxcommerce/module-blog/compare/v1.0.10...v1.0.11) (2026-08-24)
+
+
+### Bug Fixes
+
+* pick headline image with the native media gallery ([#23](https://github.com/magenxcommerce/module-blog/issues/23)) ([ad71aba](https://github.com/magenxcommerce/module-blog/commit/ad71aba2deab4d0e8dde5b76f87f8d38ce435a61))
+
 ## [1.0.10](https://github.com/magenxcommerce/module-blog/compare/v1.0.9...v1.0.10) (2026-08-24)
 
 
