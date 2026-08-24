@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Magenx\Blog\Model\Resolver;
 
 use Magenx\Blog\Model\Category;
-use Magenx\Blog\Model\MediaUrl;
 use Magenx\Blog\Model\Post;
 use Magenx\Blog\Model\Tag;
 
@@ -17,13 +16,6 @@ use Magenx\Blog\Model\Tag;
  */
 class DataMapper
 {
-    private MediaUrl $mediaUrl;
-
-    public function __construct(MediaUrl $mediaUrl)
-    {
-        $this->mediaUrl = $mediaUrl;
-    }
-
     public function mapPost(Post $post): array
     {
         return [
@@ -31,8 +23,7 @@ class DataMapper
             'name' => (string) $post->getTitle(),
             'short_description' => $post->getShortDescription(),
             'post_content' => $post->getContent(),
-            // Stored as a media-relative path; the storefront needs a URL.
-            'image' => $this->mediaUrl->toUrl($post->getImage()),
+            'image' => $post->getImage(),
             'url_key' => (string) $post->getUrlKey(),
             'publish_date' => $post->getPublishDate(),
             'author_name' => $post->getAuthorName(),

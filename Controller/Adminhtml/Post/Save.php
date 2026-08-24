@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Controller\Adminhtml\Post;
 
-use Magenx\Blog\Model\MediaUrl;
 use Magenx\Blog\Model\PostFactory;
 use Magenx\Blog\Model\PostRepository;
 use Magenx\Blog\Model\UrlKey;
 use Magento\Backend\App\Action;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Filesystem;
-use Magento\Framework\Image\AdapterFactory;
-use Magento\MediaStorage\Model\File\UploaderFactory;
 
 class Save extends Action implements HttpPostActionInterface
 {
@@ -26,29 +21,17 @@ class Save extends Action implements HttpPostActionInterface
     private PostRepository $postRepository;
     private PostFactory $postFactory;
     private UrlKey $urlKey;
-    private UploaderFactory $uploaderFactory;
-    private AdapterFactory $imageAdapterFactory;
-    private Filesystem $filesystem;
-    private MediaUrl $mediaUrl;
 
     public function __construct(
         Action\Context $context,
         PostRepository $postRepository,
         PostFactory $postFactory,
-        UrlKey $urlKey,
-        UploaderFactory $uploaderFactory,
-        AdapterFactory $imageAdapterFactory,
-        Filesystem $filesystem,
-        MediaUrl $mediaUrl
+        UrlKey $urlKey
     ) {
         parent::__construct($context);
         $this->postRepository = $postRepository;
         $this->postFactory = $postFactory;
         $this->urlKey = $urlKey;
-        $this->uploaderFactory = $uploaderFactory;
-        $this->imageAdapterFactory = $imageAdapterFactory;
-        $this->filesystem = $filesystem;
-        $this->mediaUrl = $mediaUrl;
     }
 
     public function execute()
@@ -75,7 +58,9 @@ class Save extends Action implements HttpPostActionInterface
             'title' => trim((string) ($data['title'] ?? '')),
             'short_description' => $data['short_description'] ?? null,
             'content' => $data['content'] ?? null,
-            'image' => $this->resolveImage($data, $post->getImage()),
+            // A media path picked in the gallery ("/media/blog/hero.jpg"),
+            // stored exactly as inserted.
+            'image' => trim((string) ($data['image'] ?? '')) ?: null,
             'url_key' => $this->urlKey->normalize(
                 (string) ($data['url_key'] ?? ''),
                 (string) ($data['title'] ?? '')
@@ -147,87 +132,6 @@ class Save extends Action implements HttpPostActionInterface
         $ids = array_values(array_unique(array_map('intval', $value)));
 
         return $ids ?: [0];
-    }
-
-    /**
-     * Works out what magenx_blog_post.image should hold after this save.
-     *
-     * The admin image element posts three things, any of which may be absent:
-     * an uploaded file in $_FILES, a hidden image[value] carrying what was
-     * already set (as the absolute URL the form rendered), and image[delete]
-     * when the "Delete Image" box is ticked. A new upload wins; then a delete;
-     * otherwise the existing path is kept.
-     *
-     * An upload that fails must not take the rest of the post down with it —
-     * the admin gets an error message and the previous image stays.
-     */
-    private function resolveImage(array $data, ?string $currentImage): ?string
-    {
-        $posted = is_array($data['image'] ?? null) ? $data['image'] : [];
-
-        if ($this->hasUploadedFile()) {
-            try {
-                return $this->uploadImage();
-            } catch (\Exception $e) {
-                $this->messageManager->addErrorMessage(
-                    __('The headline image could not be uploaded: %1', $e->getMessage())
-                );
-
-                return $currentImage;
-            }
-        }
-
-        if (!empty($posted['delete'])) {
-            return null;
-        }
-
-        if (isset($posted['value'])) {
-            return $this->mediaUrl->toPath((string) $posted['value']);
-        }
-
-        return $currentImage;
-    }
-
-    private function hasUploadedFile(): bool
-    {
-        $file = $this->getRequest()->getFiles('image');
-
-        return is_array($file)
-            && !empty($file['name'])
-            && (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK;
-    }
-
-    /** @return string media-relative path of the stored file */
-    private function uploadImage(): string
-    {
-        $uploader = $this->uploaderFactory->create(['fileId' => 'image']);
-        $uploader->setAllowedExtensions(['jpg', 'jpeg', 'png', 'gif', 'webp']);
-        $uploader->setAllowRenameFiles(true);
-        // Flat directory, not Magento's a/b/abc.jpg dispersion: the path is
-        // read back by a headless storefront, where a predictable URL is worth
-        // more than spreading files across subdirectories.
-        $uploader->setFilesDispersion(false);
-        $uploader->setAllowCreateFolders(true);
-        // Extension alone is not proof of an image; the adapter has to be able
-        // to actually open the file. SVG is deliberately not in the list above:
-        // it is markup, it would be served from the media domain verbatim, and
-        // no image adapter can vet it.
-        $uploader->addValidateCallback('image', $this, 'validateUploadedImage');
-
-        $subdirectory = $this->mediaUrl->getSubdirectory();
-        $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
-        $result = $uploader->save($mediaDirectory->getAbsolutePath($subdirectory));
-
-        return $subdirectory . '/' . ltrim((string) $result['file'], '/');
-    }
-
-    /**
-     * Uploader validate callback — public because the uploader calls it back
-     * by name on this object.
-     */
-    public function validateUploadedImage(string $filePath): void
-    {
-        $this->imageAdapterFactory->create()->validateUploadFile($filePath);
     }
 
     /** @return int[] */
