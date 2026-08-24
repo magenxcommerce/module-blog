@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.10](https://github.com/magenxcommerce/module-blog/compare/v1.0.9...v1.0.10) (2026-08-24)
+
+
+### Bug Fixes
+
+* Blog modal and image selector ([#21](https://github.com/magenxcommerce/module-blog/issues/21)) ([897ff35](https://github.com/magenxcommerce/module-blog/commit/897ff35610f64167e0962e374cf1c95933134bb5))
+
 ## [1.0.9](https://github.com/magenxcommerce/module-blog/compare/v1.0.8...v1.0.9) (2026-08-24)
 
 
