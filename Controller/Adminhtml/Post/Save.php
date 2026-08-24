@@ -75,7 +75,9 @@ class Save extends Action implements HttpPostActionInterface
             'title' => trim((string) ($data['title'] ?? '')),
             'short_description' => $data['short_description'] ?? null,
             'content' => $data['content'] ?? null,
-            'image' => $this->resolveImage($data, $post->getImage()),
+            // A media path picked in the gallery ("/media/blog/hero.jpg"),
+            // stored exactly as inserted.
+            'image' => trim((string) ($data['image'] ?? '')) ?: null,
             'url_key' => $this->urlKey->normalize(
                 (string) ($data['url_key'] ?? ''),
                 (string) ($data['title'] ?? '')
