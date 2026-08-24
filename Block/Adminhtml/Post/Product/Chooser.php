@@ -10,8 +10,8 @@ use Magento\Backend\Block\Widget\Grid\Extended;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 
 /**
- * The "Add Products" popup grid (opened in a modal iframe from
- * Edit\Tab\RelatedProducts). Searchable/filterable like any admin grid;
+ * The "Add Products" popup grid (loaded as a layout fragment into the modal
+ * Edit\Tab\RelatedProducts opens). Searchable/filterable like any admin grid;
  * already-linked products are excluded. Each row's "Add" action is a plain
  * link to Controller\Adminhtml\Post\Product\Add, which appends the relation
  * and redirects back here — so the admin can keep adding without the modal
@@ -79,7 +79,13 @@ class Chooser extends Extended
             'actions' => [
                 [
                     'caption' => __('Add'),
-                    'url' => ['base' => '*/post_product/add', 'params' => ['post_id' => $postId]],
+                    // post_id rides in the route path, not in
+                    // 'url' => ['params' => ...]: Widget\Grid\Column\Renderer\
+                    // Action::_transformActionData *appends* that array to the
+                    // param list ($params[] = ...) instead of merging it, and
+                    // Framework\Url drops non-scalar route params — so post_id
+                    // never reached the controller and every Add was a no-op.
+                    'url' => ['base' => '*/post_product/add/post_id/' . $postId],
                     'field' => 'product_id',
                 ],
             ],
