@@ -14,8 +14,8 @@ use Magento\Framework\Registry;
  * relation-table-backed related-products picker (not a free-text SKU
  * field). This tab lists the products currently linked to the post
  * (magenx_blog_post_product, ordered by position); products are added via
- * the "Add Products" modal (Product\Chooser, opened in an iframe from the
- * accompanying phtml) and removed / reordered via row actions — the same
+ * the "Add Products" modal (Product\Chooser, fetched as a layout fragment by
+ * js/related-products-modal) and removed / reordered via row actions — the same
  * search-then-attach shape core Magento uses to assign products to a
  * category.
  */
@@ -83,20 +83,26 @@ class RelatedProducts extends Extended
             'filter' => false,
             'sortable' => false,
             'is_system' => true,
+            // The constant params (post_id, direction) ride in the route
+            // path rather than 'url' => ['params' => ...]: Widget\Grid\Column\
+            // Renderer\Action::_transformActionData *appends* that array to the
+            // param list ($params[] = ...) instead of merging it, and
+            // Framework\Url drops non-scalar route params — so they never
+            // reached the controllers and every row action was a no-op.
             'actions' => [
                 [
                     'caption' => __('Move Up'),
-                    'url' => ['base' => '*/post_product/move', 'params' => ['post_id' => $postId, 'direction' => 'up']],
+                    'url' => ['base' => '*/post_product/move/post_id/' . $postId . '/direction/up'],
                     'field' => 'product_id',
                 ],
                 [
                     'caption' => __('Move Down'),
-                    'url' => ['base' => '*/post_product/move', 'params' => ['post_id' => $postId, 'direction' => 'down']],
+                    'url' => ['base' => '*/post_product/move/post_id/' . $postId . '/direction/down'],
                     'field' => 'product_id',
                 ],
                 [
                     'caption' => __('Remove'),
-                    'url' => ['base' => '*/post_product/remove', 'params' => ['post_id' => $postId]],
+                    'url' => ['base' => '*/post_product/remove/post_id/' . $postId],
                     'field' => 'product_id',
                 ],
             ],

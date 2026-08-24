@@ -58,8 +58,10 @@ define([
         // navigation inside the modal.
         $content.on('click', 'a[href*="post_product/add"]', function (e) {
             e.preventDefault();
-            added = true;
-            $.get($(this).attr('href')).always(loadGrid);
+
+            $.get($(this).attr('href')).done(function () {
+                added = true;
+            }).always(loadGrid);
         });
     };
 });
