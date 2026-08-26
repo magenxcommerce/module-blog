@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.13](https://github.com/magenxcommerce/module-blog/compare/v1.0.12...v1.0.13) (2026-08-26)
+
+
+### Bug Fixes
+
+* Improve admin form tab navigation and taxonomy field layout ([#27](https://github.com/magenxcommerce/module-blog/issues/27)) ([d685bc3](https://github.com/magenxcommerce/module-blog/commit/d685bc3a5c3ace7786c18a8001fd83d0fde0998a))
+* keep the Related Products tab active and row the taxonomy fields ([d685bc3](https://github.com/magenxcommerce/module-blog/commit/d685bc3a5c3ace7786c18a8001fd83d0fde0998a))
+
 ## [1.0.12](https://github.com/magenxcommerce/module-blog/compare/v1.0.11...v1.0.12) (2026-08-24)
 
 
