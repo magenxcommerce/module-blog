@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Block\Adminhtml\Post\Edit\Tab;
 
+use Magenx\Blog\Block\Adminhtml\Post\Edit\Tabs;
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Grid\Extended;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
@@ -113,7 +114,21 @@ class RelatedProducts extends Extended
 
     public function getGridUrl(): string
     {
-        return $this->getUrl('*/post/edit', ['post_id' => $this->getPostId(), '_current' => true]);
+        return $this->getReloadUrl();
+    }
+
+    /**
+     * The post form reopened on this tab. Without the active_tab param the
+     * form lands on General (Widget\Tabs falls back to the first tab), which
+     * is what made every row action and every modal close look like it had
+     * thrown the admin out of the related-products list.
+     */
+    public function getReloadUrl(): string
+    {
+        return $this->getUrl(
+            '*/post/edit',
+            ['post_id' => $this->getPostId(), 'active_tab' => Tabs::TAB_RELATED_PRODUCTS]
+        );
     }
 
     /**
@@ -133,6 +148,7 @@ class RelatedProducts extends Extended
             '#post-related-products-add' => [
                 'Magenx_Blog/js/related-products-modal' => [
                     'url' => $this->getAddProductsUrl(),
+                    'reloadUrl' => $this->getReloadUrl(),
                     'title' => __('Add Products')->render(),
                     'errorMessage' => __('Could not load the product list.')->render(),
                 ],

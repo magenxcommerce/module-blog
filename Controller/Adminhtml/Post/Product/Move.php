@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Magenx\Blog\Controller\Adminhtml\Post\Product;
 
+use Magenx\Blog\Block\Adminhtml\Post\Edit\Tabs;
 use Magenx\Blog\Model\PostRepository;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpGetActionInterface;
@@ -32,6 +33,11 @@ class Move extends Action implements HttpGetActionInterface
             $this->postRepository->moveProduct($postId, $productId, $direction);
         }
 
-        return $resultRedirect->setPath('*/post/edit', ['post_id' => $postId]);
+        // Back to the tab the action was triggered from: without active_tab
+        // the tabs widget falls back to General.
+        return $resultRedirect->setPath(
+            '*/post/edit',
+            ['post_id' => $postId, 'active_tab' => Tabs::TAB_RELATED_PRODUCTS]
+        );
     }
 }
