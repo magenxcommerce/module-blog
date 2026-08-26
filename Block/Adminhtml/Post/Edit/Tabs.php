@@ -16,6 +16,13 @@ use Magento\Backend\Block\Widget\Tabs as WidgetTabs;
  */
 class Tabs extends WidgetTabs
 {
+    /**
+     * Tab id of the related-products tab, also the value the parent block
+     * reads from the 'active_tab' request param, so anything redirecting back
+     * to the post form can reopen this tab instead of General.
+     */
+    public const TAB_RELATED_PRODUCTS = 'related_products';
+
     protected function _construct(): void
     {
         parent::_construct();
@@ -50,7 +57,7 @@ class Tabs extends WidgetTabs
         // the id does not resolve, so a post_id present here means saved.
         $postId = (int) $this->getRequest()->getParam('post_id');
 
-        $this->addTab('related_products', [
+        $this->addTab(self::TAB_RELATED_PRODUCTS, [
             'label' => __('Related Products'),
             'title' => __('Related Products'),
             'content' => $postId

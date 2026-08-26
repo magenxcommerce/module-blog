@@ -98,18 +98,40 @@ class Save extends Action implements HttpPostActionInterface
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
 
-            return $resultRedirect->setPath('*/*/edit', ['post_id' => $postId ?: null]);
+            return $resultRedirect->setPath('*/*/edit', $this->getEditParams($postId ?: null));
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__('Something went wrong while saving the blog post.'));
 
-            return $resultRedirect->setPath('*/*/edit', ['post_id' => $postId ?: null]);
+            return $resultRedirect->setPath('*/*/edit', $this->getEditParams($postId ?: null));
         }
 
         if ($this->getRequest()->getParam('back')) {
-            return $resultRedirect->setPath('*/*/edit', ['post_id' => $post->getId()]);
+            return $resultRedirect->setPath('*/*/edit', $this->getEditParams((int) $post->getId()));
         }
 
         return $resultRedirect->setPath('*/*/');
+    }
+
+    /**
+     * Edit-form redirect params, keeping the tab the form was submitted from.
+     *
+     * The tabs widget writes the current tab into the form action as
+     * active_tab; carrying it through means "Save and Continue" and a failed
+     * validation come back to that tab instead of General.
+     *
+     * @param int|null $postId
+     * @return array
+     */
+    private function getEditParams(?int $postId): array
+    {
+        $params = ['post_id' => $postId];
+        $activeTab = $this->getRequest()->getParam('active_tab');
+
+        if (is_string($activeTab) && $activeTab !== '') {
+            $params['active_tab'] = $activeTab;
+        }
+
+        return $params;
     }
 
     /**

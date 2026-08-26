@@ -1,0 +1,39 @@
+/*
+ * Admin styling for the blog post form.
+ *
+ * Categories and Tags are two short multiselects that read as a pair, so the
+ * taxonomy fieldset lays its fields out in a row instead of the default
+ * stacked column. The fieldset renderer emits each field as a direct
+ * `.admin__field` child of the <fieldset> (widget/form/renderer/fieldset.phtml
+ * -> getBasicChildrenHtml), so a flex container on the fieldset is enough --
+ * the legend, the <br> after it and the messages block stay full width.
+ */
+#taxonomy_fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+#taxonomy_fieldset > legend,
+#taxonomy_fieldset > br,
+#taxonomy_fieldset > .messages {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+#taxonomy_fieldset > .magenx-blog-taxonomy-column {
+    flex: 1 1 0;
+    min-width: 32rem;
+    padding-right: 3rem;
+}
+
+#taxonomy_fieldset > .magenx-blog-taxonomy-column:last-child {
+    padding-right: 0;
+}
+
+/* Narrow viewports: fall back to the stacked default. */
+@media (max-width: 768px) {
+    #taxonomy_fieldset {
+        display: block;
+    }
+}

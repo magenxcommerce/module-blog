@@ -50,6 +50,9 @@ class Taxonomy extends Generic
         $form->setUseContainer(false);
         $this->setForm($form);
 
+        // The two multiselects sit side by side rather than stacked; the row
+        // layout itself lives in css/blog-admin.css, keyed off this class and
+        // the fieldset id.
         $fieldset = $form->addFieldset('taxonomy_fieldset', ['legend' => __('Categories & Tags')]);
 
         $categoryOptions = [];
@@ -61,6 +64,7 @@ class Taxonomy extends Generic
             'label' => __('Categories'),
             'title' => __('Categories'),
             'values' => $categoryOptions,
+            'css_class' => 'magenx-blog-taxonomy-column',
         ]);
 
         $tagOptions = [];
@@ -73,6 +77,7 @@ class Taxonomy extends Generic
             'title' => __('Tags'),
             'values' => $tagOptions,
             'note' => __('Tags are created from the Blog > Tags grid.'),
+            'css_class' => 'magenx-blog-taxonomy-column',
         ]);
 
         if ($post) {

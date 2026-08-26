@@ -8,6 +8,9 @@
   new child element contains the parent" — and the page stayed collapsed.
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="admin-2columns-left">
+    <head>
+        <css src="Magenx_Blog::css/blog-admin.css"/>
+    </head>
     <body>
         <referenceContainer name="left">
             <block class="Magenx\Blog\Block\Adminhtml\Post\Edit\Tabs" name="post_edit_tabs"/>

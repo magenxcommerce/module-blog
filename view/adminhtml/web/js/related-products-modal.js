@@ -20,7 +20,9 @@ define([
      * Each row's "Add" link is intercepted and replayed over AJAX, then the
      * grid is reloaded, so adding several products never leaves the modal.
      * Closing it reloads the page so the Related Products tab picks up
-     * whatever was added.
+     * whatever was added -- through config.reloadUrl, which carries
+     * active_tab: a plain location.reload() drops the param and reopens the
+     * form on General.
      */
     return function (config, element) {
         var $content = $('<div class="magenx-blog-product-chooser"></div>'),
@@ -33,7 +35,7 @@ define([
             buttons: [],
             closed: function () {
                 if (added) {
-                    window.location.reload();
+                    window.location.href = config.reloadUrl || window.location.href;
                 }
             }
         });
