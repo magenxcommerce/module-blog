@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/magenxcommerce/module-blog/compare/v1.0.13...v2.0.0) (2026-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* Magenx_Blog no longer provides blogPosts, blogPost, blogTag or blogCategories. Installs that serve a storefront must also require magenxcommerce/module-blog-graph-ql and run `bin/magento module:enable Magenx_BlogGraphQl && bin/magento setup:upgrade`.
+
+### Bug Fixes
+
+* Extract GraphQL resolvers to separate Magenx_BlogGraphQl module ([#29](https://github.com/magenxcommerce/module-blog/issues/29)) ([f5fc5ff](https://github.com/magenxcommerce/module-blog/commit/f5fc5ff80748a73988e2cf1edeef60ba75f65db7))
+
 ## [1.0.13](https://github.com/magenxcommerce/module-blog/compare/v1.0.12...v1.0.13) (2026-08-26)
 
 
