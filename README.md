@@ -79,3 +79,10 @@ bin/magento setup:upgrade
   different consumer of the GraphQL surface has to do its own.
 - Categories and tags are flat lists (no hierarchy) — matches how the
   storefront actually consumes them.
+- The storefront filters on `Magenx\Blog\Model\ResourceModel\Post\Collection`
+  (store scope, category, tag, sku) are semi-joins against
+  `main_table.post_id`, not JOINs. Every relation table carries its own
+  `post_id`, and a joined-in table both made later `post_id` filters
+  ambiguous and inflated `getSize()` — a post assigned to *both* "All Store
+  Views" and a specific store matched `post_store` twice, and Magento counts
+  joined rows. Adding a new relation filter should follow the same shape.
