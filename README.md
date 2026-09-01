@@ -2,9 +2,10 @@
 
 Minimal headless blog content module. Magento admin is the only authoring
 surface (posts, categories, tags, related posts, related products); the
-storefront is Next.js and consumes content exclusively over GraphQL. No
-`view/frontend`, no theme templates, no InstallSchema-style migrations —
-schema is declared in `etc/db_schema.xml` only.
+storefront is Next.js and consumes content exclusively over GraphQL, served by
+the companion module `Magenx_BlogGraphQl`. No `view/frontend`, no theme
+templates, no InstallSchema-style migrations — schema is declared in
+`etc/db_schema.xml` only.
 
 This module owns its own entities end to end. There is no stock Magento
 "Blog" module it wraps or extends.
@@ -41,7 +42,7 @@ Stores > Configuration > **Magenx > Blog > General** (ACL:
 
 | Field | Default | Effect |
 | --- | --- | --- |
-| Enable Blog | Yes | When No, `blogPosts` / `blogPost` / `blogTag` / `blogCategories` resolve to empty results for that store; no data is removed |
+| Enable Blog | Yes | When No, the `Magenx_BlogGraphQl` queries resolve to empty results for that store; no data is removed |
 | Posts Per Page | 10 | Page size `blogPosts` uses when the query omits `pageSize` |
 | Maximum Page Size | 50 | Upper bound a `blogPosts` query may request; larger values are clamped |
 
@@ -49,11 +50,17 @@ All three are store-scoped and read through `Magenx\Blog\Model\Config`.
 
 ## GraphQL
 
-`Query.blogPosts(filter, pageSize, currentPage)`, `Query.blogPost(urlKey)`,
-`Query.blogTag(urlKey)`, `Query.blogCategories`. `BlogPostFilterInput`
-supports `url_key`, `category_id`, `tag_id` and `sku` — all resolved
-server-side (no client-side full-list scanning required from the
-storefront). See `etc/schema.graphqls` for the full, `@doc`'d surface.
+Not here. The storefront surface — `Query.blogPosts`, `blogPost`, `blogTag`,
+`blogCategories` and their resolvers — lives in **`Magenx_BlogGraphQl`**
+([magenxcommerce/module-blog-graph-ql](https://github.com/magenxcommerce/module-blog-graph-ql)),
+the same split as `Magenx_Rma` / `Magenx_RmaGraphQl`. This module keeps the
+entities, the admin and the configuration those resolvers read, so a
+backend-only install carries no `Magento_GraphQl` dependency.
+
+Installing `Magenx_Blog` alone gives you admin authoring and nothing on the
+storefront. The filters the storefront needs (`url_key`, `category_id`,
+`tag_id`, `sku`, store scope, published-only) are still implemented here, on
+`Magenx\Blog\Model\ResourceModel\Post\Collection`.
 
 ## Install
 
@@ -62,12 +69,14 @@ bin/magento module:enable Magenx_Blog
 bin/magento setup:upgrade
 ```
 
+For the storefront, install `magenxcommerce/module-blog-graph-ql` as well.
+
 ## Caveats
 
 - No live Magento install was available to exercise this module during
-  development; admin CRUD and the GraphQL surface still need a live
-  `setup:upgrade` + manual smoke test (create a post, attach products,
-  query `blogPost` from the storefront).
+  development; admin CRUD still needs a live `setup:upgrade` + manual smoke
+  test (create a post, attach products, query `blogPost` from the storefront
+  with `Magenx_BlogGraphQl` installed).
 - Saving a post, category or tag cleans its `magenx_blog_*` cache tags, so
   Magento's own cache invalidation PURGEs the storefront and the blog pages
   revalidate immediately rather than after the storefront's 30-minute blog
@@ -76,6 +85,13 @@ bin/magento setup:upgrade
 - Post HTML is stored exactly as authored — there is no server-side
   sanitization. The Next.js storefront sanitizes `post_content` and
   `short_description` on read (`sanitizeCmsHtml`, `packages/engine`); a
-  different consumer of the GraphQL surface has to do its own.
+  different consumer of the `Magenx_BlogGraphQl` surface has to do its own.
 - Categories and tags are flat lists (no hierarchy) — matches how the
   storefront actually consumes them.
+- The storefront filters on `Magenx\Blog\Model\ResourceModel\Post\Collection`
+  (store scope, category, tag, sku) are semi-joins against
+  `main_table.post_id`, not JOINs. Every relation table carries its own
+  `post_id`, and a joined-in table both made later `post_id` filters
+  ambiguous and inflated `getSize()` — a post assigned to *both* "All Store
+  Views" and a specific store matched `post_store` twice, and Magento counts
+  joined rows. Adding a new relation filter should follow the same shape.
